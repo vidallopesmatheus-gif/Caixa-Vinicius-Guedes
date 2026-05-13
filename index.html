@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caixa Diário - Vinicius Guedes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .header-left h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .store-selector {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            min-width: 200px;
+            transition: all 0.3s ease;
+        }
+
+        .store-selector:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .store-selector option {
+            background: #667eea;
+            color: white;
+        }
+
+        .date-navigation {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .date-navigation button {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .date-navigation button:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .current-date {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            min-width: 120px;
+            text-align: center;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #f8f9fa;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 4px solid;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-card.inicio {
+            border-left-color: #667eea;
+        }
+
+        .stat-card.entradas {
+            border-left-color: #48bb78;
+        }
+
+        .stat-card.saidas {
+            border-left-color: #f56565;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #718096;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #2d3748;
+        }
+
+        .stat-card.entradas .stat-value {
+            color: #48bb78;
+        }
+
+        .stat-card.saidas .stat-value {
+            color: #f56565;
+        }
+
+        .main-content {
+            padding: 30px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 2px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 8px;
+        }
+
+        input[type="number"],
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        input[type="number"]:focus,
+        input[type="text"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .saidas-container {
+            background: #fff5f7;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #f56565;
+        }
+
+        .saida-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid #fed7d7;
+        }
+
+        .saida-info {
+            flex: 1;
+        }
+
+        .saida-valor {
+            font-weight: 700;
+            color: #f56565;
+            font-size: 16px;
+        }
+
+        .saida-descricao {
+            font-size: 12px;
+            color: #718096;
+            margin-top: 4px;
+        }
+
+        .btn-remove-saida {
+            background: #fed7d7;
+            border: none;
+            color: #c53030;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-remove-saida:hover {
+            background: #fc8181;
+            color: white;
+        }
+
+        .btn-add-saida {
+            background: white;
+            border: 2px dashed #cbd5e0;
+            color: #4a5568;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-add-saida:hover {
+            border-color: #667eea;
+            color: #667eea;
+            background: #f7fafc;
+        }
+
+        .calculation-section {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .calculation-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .calculation-row:last-child {
+            border-bottom: none;
+        }
+
+        .calculation-label {
+            color: #4a5568;
+            font-weight: 500;
+        }
+
+        .calculation-value {
+            font-weight: 700;
+            font-size: 16px;
+            color: #2d3748;
+        }
+
+        .final-balance {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .final-balance-label {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 8px;
+        }
+
+        .final-balance-value {
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            flex: 1;
+            min-width: 150px;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-export {
+            background: #48bb78;
+            color: white;
+        }
+
+        .btn-export:hover {
+            background: #38a169;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(72, 187, 120, 0.3);
+        }
+
+        .btn-clear {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+
+        .btn-clear:hover {
+            background: #cbd5e0;
+        }
+
+        .records-section {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #e2e8f0;
+        }
+
+        .records-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .records-table thead {
+            background: #f7fafc;
+        }
+
+        .records-table th {
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #4a5568;
+            border-bottom: 2px solid #e2e8f0;
+            font-size: 14px;
+        }
+
+        .records-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+            color: #2d3748;
+        }
+
+        .records-table tbody tr:hover {
+            background: #f7fafc;
+        }
+
+        .value-positive {
+            color: #48bb78;
+            font-weight: 600;
+        }
+
+        .value-negative {
+            color: #f56565;
+            font-weight: 600;
+        }
+
+        .btn-delete-record {
+            background: #fed7d7;
+            border: none;
+            color: #c53030;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-delete-record:hover {
+            background: #fc8181;
+            color: white;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #718096;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .header-left {
+                width: 100%;
+            }
+
+            .store-selector {
+                width: 100%;
+            }
+
+            .date-navigation {
+                justify-content: center;
+                width: 100%;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            button {
+                min-width: 100%;
+            }
+
+            .records-table {
+                font-size: 12px;
+            }
+
+            .records-table th,
+            .records-table td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-left">
+                <h1>📊 Caixa diário</h1>
+                <select id="storeSelect" class="store-selector">
+                    <option value="loja1">🏪 Loja 1 - Malubiju</option>
+                    <option value="loja2">🏪 Loja 2</option>
+                    <option value="loja3">🏪 Loja 3</option>
+                </select>
+            </div>
+            <div class="date-navigation">
+                <button onclick="previousDay()">←</button>
+                <div class="current-date" id="currentDate">13 Mai</div>
+                <button onclick="nextDay()">→</button>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card inicio">
+                <div class="stat-label">📥 Início do dia</div>
+                <div class="stat-value" id="statInicio">R$ 0,00</div>
+            </div>
+            <div class="stat-card entradas">
+                <div class="stat-label">📤 Entradas</div>
+                <div class="stat-value" id="statEntradas">R$ 0,00</div>
+            </div>
+            <div class="stat-card saidas">
+                <div class="stat-label">💸 Saídas</div>
+                <div class="stat-value" id="statSaidas">R$ 0,00</div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="section-title">📋 Registro do dia — <span id="dayTitle">dia 13</span></div>
+
+            <form id="caixaForm">
+                <div class="form-group">
+                    <label for="saldoInicio">Saldo início do dia (R$)</label>
+                    <input type="number" id="saldoInicio" step="0.01" min="0" value="0.00" readonly style="background: #f7fafc; color: #718096;">
+                </div>
+
+                <div class="form-group">
+                    <label for="entradas">Dinheiro que entrou hoje (R$)</label>
+                    <input type="number" id="entradas" step="0.01" min="0" placeholder="0,00" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Saídas do dia</label>
+                    <div class="saidas-container" id="saidasContainer"></div>
+                    <button type="button" class="btn-add-saida" onclick="adicionarSaida()">+ Adicionar saída</button>
+                </div>
+
+                <div class="calculation-section">
+                    <div class="calculation-row">
+                        <span class="calculation-label">Saldo calculado (automático)</span>
+                        <span class="calculation-value" id="saldoCalculado">R$ 0,00</span>
+                    </div>
+                </div>
+
+                <div class="final-balance">
+                    <div class="final-balance-label">💰 Saldo Confirmado</div>
+                    <div class="final-balance-value" id="saldoFinal">R$ 0,00</div>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="btn-export" onclick="exportarCSV()">📥 Exportar dados</button>
+                    <button type="button" class="btn-clear" onclick="limparFormulario()">🗑️ Limpar</button>
+                    <button type="submit" class="btn-submit">✅ Confirmar saldo</button>
+                </div>
+            </form>
+
+            <div class="records-section">
+                <div class="section-title">📈 Histórico de movimentações</div>
+                <div id="recordsContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentDate = new Date(2026, 4, 13); // 13 de maio de 2026
+        let lojas = {
+            loja1: { nome: 'Loja 1 - Malubiju', records: [] },
+            loja2: { nome: 'Loja 2', records: [] },
+            loja3: { nome: 'Loja 3', records: [] }
+        };
+
+        function getStorageKey(store, date) {
+            return `caixa_${store}_${date.toISOString().split('T')[0]}`;
+        }
+
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            }).format(value);
+        }
+
+        function formatDate(date) {
+            const options = { day: 'numeric', month: 'short' };
+            return new Intl.DateTimeFormat('pt-BR', options).format(date).replace('.', '');
+        }
+
+        function getDateFormatted(date) {
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            return `${year}-${month}-${day}`;
+        }
+
+        function updateDateDisplay() {
+            const dayName = formatDate(currentDate);
+            const dayNumber = currentDate.getDate();
+            document.getElementById('currentDate').textContent = dayName;
+            document.getElementById('dayTitle').textContent = `dia ${dayNumber}`;
+        }
+
+        function previousDay() {
+            currentDate.setDate(currentDate.getDate() - 1);
+            updateDateDisplay();
+            carregarDados();
+        }
+
+        function nextDay() {
+            currentDate.setDate(currentDate.getDate() + 1);
+            updateDateDisplay();
+            carregarDados();
+        }
+
+        function adicionarSaida() {
+            const container = document.getElementById('saidasContainer');
+            const id = Date.now();
+            
+            const html = `
+                <div class="saida-item" data-saida-id="${id}">
+                    <div style="flex: 1; display: flex; gap: 10px;">
+                        <input type="number" class="saida-valor" step="0.01" min="0" placeholder="0,00" data-id="${id}">
+                        <input type="text" class="saida-descricao-input" placeholder="Descrição" data-id="${id}" style="flex: 1; min-width: 150px;">
+                    </div>
+                    <button type="button" class="btn-remove-saida" onclick="removerSaida(${id})">Remover</button>
+                </div>
+            `;
+            
+            container.insertAdjacentHTML('beforeend', html);
+            
+            // Adicionar listeners para atualizar cálculos
+            const inputs = document.querySelectorAll(`[data-id="${id}"]`);
+            inputs.forEach(input => {
+                input.addEventListener('input', calcularSaldoAutomatico);
+            });
+        }
+
+        function removerSaida(id) {
+            const item = document.querySelector(`[data-saida-id="${id}"]`);
+            if (item) {
+                item.remove();
+                calcularSaldoAutomatico();
+            }
+        }
+
+        function getSaidasData() {
+            const saidas = [];
+            const items = document.querySelectorAll('.saida-item');
+            
+            items.forEach(item => {
+                const id = item.getAttribute('data-saida-id');
+                const valor = parseFloat(item.querySelector(`[data-id="${id}"].saida-valor`).value) || 0;
+                const descricao = item.querySelector(`[data-id="${id}"].saida-descricao-input`).value || '';
+                
+                if (valor > 0) {
+                    saidas.push({ valor, descricao });
+                }
+            });
+            
+            return saidas;
+        }
+
+        function calcularSaldoAutomatico() {
+            const saldoInicio = parseFloat(document.getElementById('saldoInicio').value) || 0;
+            const entradas = parseFloat(document.getElementById('entradas').value) || 0;
+            const saidas = getSaidasData();
+            const totalSaidas = saidas.reduce((sum, s) => sum + s.valor, 0);
+            
+            const saldoCalculado = saldoInicio + entradas - totalSaidas;
+            
+            document.getElementById('saldoCalculado').textContent = formatCurrency(saldoCalculado);
+            document.getElementById('saldoFinal').textContent = formatCurrency(saldoCalculado);
+            
+            // Atualizar stats
+            document.getElementById('statInicio').textContent = formatCurrency(saldoInicio);
+            document.getElementById('statEntradas').textContent = formatCurrency(entradas);
+            document.getElementById('statSaidas').textContent = formatCurrency(totalSaidas);
+        }
+
+        document.getElementById('entradas').addEventListener('input', calcularSaldoAutomatico);
+
+        function carregarSaldoAnterior() {
+            const yesterday = new Date(currentDate);
+            yesterday.setDate(yesterday.getDate() - 1);
+            const storeSelect = document.getElementById('storeSelect').value;
+            const key = getStorageKey(storeSelect, yesterday);
+            const data = JSON.parse(localStorage.getItem(key));
+            
+            if (data && data.saldoFinal) {
+                document.getElementById('saldoInicio').value = data.saldoFinal.toFixed(2);
+            } else {
+                document.getElementById('saldoInicio').value = '0.00';
+            }
+        }
+
+        function salvarDados() {
+            const storeSelect = document.getElementById('storeSelect').value;
+            const key = getStorageKey(storeSelect, currentDate);
+            const saidas = getSaidasData();
+            const saldoFinal = parseFloat(document.getElementById('saldoFinal').textContent.replace('R$ ', '').replace(',', '.')) || 0;
+            
+            const data = {
+                data: getDateFormatted(currentDate),
+                saldoInicio: parseFloat(document.getElementById('saldoInicio').value),
+                entradas: parseFloat(document.getElementById('entradas').value),
+                saidas: saidas,
+                totalSaidas: saidas.reduce((sum, s) => sum + s.valor, 0),
+                saldoFinal: saldoFinal
+            };
+            
+            localStorage.setItem(key, JSON.stringify(data));
+        }
+
+        function carregarDados() {
+            const storeSelect = document.getElementById('storeSelect').value;
+            const key = getStorageKey(storeSelect, currentDate);
+            const data = JSON.parse(localStorage.getItem(key));
+            
+            carregarSaldoAnterior();
+            
+            if (data) {
+                document.getElementById('entradas').value = data.entradas.toFixed(2);
+                
+                // Limpar saídas anteriores
+                document.getElementById('saidasContainer').innerHTML = '';
+                
+                // Adicionar saídas carregadas
+                data.saidas.forEach(saida => {
+                    adicionarSaida();
+                    const items = document.querySelectorAll('.saida-item');
+                    const lastItem = items[items.length - 1];
+                    const id = lastItem.getAttribute('data-saida-id');
+                    lastItem.querySelector(`[data-id="${id}"].saida-valor`).value = saida.valor.toFixed(2);
+                    lastItem.querySelector(`[data-id="${id}"].saida-descricao-input`).value = saida.descricao;
+                });
+            } else {
+                document.getElementById('entradas').value = '0.00';
+                document.getElementById('saidasContainer').innerHTML = '';
+            }
+            
+            calcularSaldoAutomatico();
+            carregarRegistros();
+        }
+
+        function limparFormulario() {
+            document.getElementById('entradas').value = '0.00';
+            document.getElementById('saidasContainer').innerHTML = '';
+            calcularSaldoAutomatico();
+        }
+
+        function carregarRegistros() {
+            const storeSelect = document.getElementById('storeSelect').value;
+            const container = document.getElementById('recordsContainer');
+            
+            // Carregar todos os registros do localStorage para esta loja
+            const records = [];
+            for (let key in localStorage) {
+                if (key.startsWith(`caixa_${storeSelect}_`)) {
+                    const data = JSON.parse(localStorage.getItem(key));
+                    records.push(data);
+                }
+            }
+            
+            // Ordenar por data (mais recente primeiro)
+            records.sort((a, b) => new Date(b.data) - new Date(a.data));
+            
+            if (records.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📭</div>
+                        <p>Nenhum registro encontrado</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = `
+                <table class="records-table">
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Saldo Inicial</th>
+                            <th>Entradas</th>
+                            <th>Saídas</th>
+                            <th>Descrição</th>
+                            <th>Saldo Final</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            records.forEach((record, index) => {
+                const date = new Date(record.data);
+                const dateBR = date.toLocaleDateString('pt-BR');
+                const descricao = record.saidas.map(s => `${s.descricao} (R$ ${s.valor.toFixed(2)})`).join(', ') || '-';
+                
+                html += `
+                    <tr>
+                        <td>${dateBR}</td>
+                        <td>${formatCurrency(record.saldoInicio)}</td>
+                        <td class="value-positive">+${formatCurrency(record.entradas)}</td>
+                        <td class="value-negative">-${formatCurrency(record.totalSaidas)}</td>
+                        <td>${descricao}</td>
+                        <td class="value-positive">${formatCurrency(record.saldoFinal)}</td>
+                        <td>
+                            <button type="button" class="btn-delete-record" onclick="deletarRegistro('${record.data}', '${storeSelect}')">Deletar</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            html += `
+                    </tbody>
+                </table>
+            `;
+            
+            container.innerHTML = html;
+        }
+
+        function deletarRegistro(data, store) {
+            if (confirm('Tem certeza que deseja deletar este registro?')) {
+                const key = `caixa_${store}_${data}`;
+                localStorage.removeItem(key);
+                carregarRegistros();
+            }
+        }
+
+        function exportarCSV() {
+            const storeSelect = document.getElementById('storeSelect').value;
+            const storeName = lojas[storeSelect].nome;
+            
+            // Carregar todos os registros
+            const records = [];
+            for (let key in localStorage) {
+                if (key.startsWith(`caixa_${storeSelect}_`)) {
+                    const data = JSON.parse(localStorage.getItem(key));
+                    records.push(data);
+                }
+            }
+            
+            records.sort((a, b) => new Date(a.data) - new Date(b.data));
+            
+            let csv = `Caixa Diário - ${storeName}\n`;
+            csv += `Data de Exportação: ${new Date().toLocaleDateString('pt-BR')}\n\n`;
+            csv += `Data,Saldo Inicial,Entradas,Saídas,Descrição,Saldo Final\n`;
+            
+            records.forEach(record => {
+                const date = new Date(record.data).toLocaleDateString('pt-BR');
+                const descricao = record.saidas.map(s => `${s.descricao} (R$ ${s.valor.toFixed(2)})`).join('; ') || '-';
+                csv += `${date},${record.saldoInicio.toFixed(2)},${record.entradas.toFixed(2)},${record.totalSaidas.toFixed(2)},"${descricao}",${record.saldoFinal.toFixed(2)}\n`;
+            });
+            
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            const dateStr = new Date().toISOString().split('T')[0];
+            link.setAttribute('href', url);
+            link.setAttribute('download', `caixa_${storeName.replace(/\s+/g, '_')}_${dateStr}.csv`);
+            link.click();
+        }
+
+        document.getElementById('storeSelect').addEventListener('change', () => {
+            carregarDados();
+        });
+
+        document.getElementById('caixaForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const saidas = getSaidasData();
+            
+            if (saidas.length > 0) {
+                const todasTemDescricao = saidas.every(s => s.descricao.trim() !== '');
+                if (!todasTemDescricao) {
+                    alert('⚠️ Todas as saídas precisam ter uma descrição!');
+                    return;
+                }
+            }
+            
+            salvarDados();
+            alert('✅ Saldo confirmado e salvo com sucesso!');
+            nextDay();
+        });
+
+        // Inicializar
+        updateDateDisplay();
+        carregarDados();
+    </script>
+</body>
+</html>
