@@ -12,23 +12,24 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            background: #000;
             min-height: 100vh;
             padding: 20px;
+            color: #fff;
         }
 
         .container {
             max-width: 900px;
             margin: 0 auto;
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            background: #1a1a1a;
+            border-radius: 20px;
             overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
         }
 
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
             color: white;
             padding: 30px;
             display: flex;
@@ -36,20 +37,21 @@
             align-items: center;
             flex-wrap: wrap;
             gap: 20px;
+            border-bottom: 1px solid #333;
         }
 
         .header-left h1 {
             font-size: 28px;
-            font-weight: 600;
+            font-weight: 700;
             margin-bottom: 5px;
         }
 
         .store-selector {
-            background: rgba(255, 255, 255, 0.2);
-            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: #2a2a2a;
+            border: 1px solid #444;
             color: white;
             padding: 12px 16px;
-            border-radius: 8px;
+            border-radius: 12px;
             font-size: 16px;
             cursor: pointer;
             min-width: 200px;
@@ -57,12 +59,12 @@
         }
 
         .store-selector:hover {
-            background: rgba(255, 255, 255, 0.3);
-            border-color: rgba(255, 255, 255, 0.5);
+            background: #333;
+            border-color: #666;
         }
 
         .store-selector option {
-            background: #667eea;
+            background: #1a1a1a;
             color: white;
         }
 
@@ -73,26 +75,32 @@
         }
 
         .date-navigation button {
-            background: rgba(255, 255, 255, 0.2);
-            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: #2a2a2a;
+            border: 1px solid #444;
             color: white;
             padding: 10px 15px;
-            border-radius: 8px;
+            border-radius: 12px;
             cursor: pointer;
             font-size: 18px;
             transition: all 0.3s ease;
         }
 
         .date-navigation button:hover {
-            background: rgba(255, 255, 255, 0.3);
+            background: #333;
+            border-color: #666;
+        }
+
+        .date-navigation button:active {
+            transform: scale(0.95);
+            background: #444;
         }
 
         .current-date {
-            background: rgba(255, 255, 255, 0.2);
-            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: #2a2a2a;
+            border: 1px solid #444;
             color: white;
             padding: 10px 20px;
-            border-radius: 8px;
+            border-radius: 12px;
             font-weight: 600;
             min-width: 120px;
             text-align: center;
@@ -103,34 +111,40 @@
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
             padding: 30px;
-            background: #f8f9fa;
+            background: #000;
         }
 
         .stat-card {
-            background: white;
+            background: #2a2a2a;
             padding: 25px;
-            border-radius: 12px;
+            border-radius: 16px;
             border-left: 4px solid;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            background: #333;
+            transform: translateY(-2px);
         }
 
         .stat-card.inicio {
-            border-left-color: #667eea;
+            border-left-color: #5ac8fa;
         }
 
         .stat-card.entradas {
-            border-left-color: #48bb78;
+            border-left-color: #34c759;
         }
 
         .stat-card.saidas {
-            border-left-color: #f56565;
+            border-left-color: #ff3b30;
         }
 
         .stat-label {
             font-size: 12px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            color: #718096;
+            color: #999;
             margin-bottom: 8px;
             font-weight: 600;
         }
@@ -138,25 +152,30 @@
         .stat-value {
             font-size: 28px;
             font-weight: 700;
-            color: #2d3748;
+            color: #fff;
         }
 
         .stat-card.entradas .stat-value {
-            color: #48bb78;
+            color: #34c759;
         }
 
         .stat-card.saidas .stat-value {
-            color: #f56565;
+            color: #ff3b30;
+        }
+
+        .stat-card.inicio .stat-value {
+            color: #5ac8fa;
         }
 
         .main-content {
             padding: 30px;
+            background: #1a1a1a;
         }
 
         .section-title {
             font-size: 18px;
             font-weight: 600;
-            color: #2d3748;
+            color: #fff;
             margin-bottom: 20px;
             display: flex;
             align-items: center;
@@ -168,7 +187,7 @@
             display: inline-block;
             width: 4px;
             height: 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #5ac8fa 0%, #34c759 100%);
             border-radius: 2px;
         }
 
@@ -180,7 +199,7 @@
             display: block;
             font-size: 14px;
             font-weight: 600;
-            color: #4a5568;
+            color: #bbb;
             margin-bottom: 8px;
         }
 
@@ -188,20 +207,29 @@
         input[type="text"],
         textarea {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #e2e8f0;
-            border-radius: 8px;
+            padding: 14px;
+            border: 1px solid #333;
+            border-radius: 12px;
             font-size: 16px;
             transition: all 0.3s ease;
             font-family: inherit;
+            background: #2a2a2a;
+            color: #fff;
         }
 
         input[type="number"]:focus,
         input[type="text"]:focus,
         textarea:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: #5ac8fa;
+            box-shadow: 0 0 0 3px rgba(90, 200, 250, 0.1);
+            background: #333;
+        }
+
+        input[type="number"]::placeholder,
+        input[type="text"]::placeholder,
+        textarea::placeholder {
+            color: #666;
         }
 
         textarea {
@@ -210,22 +238,22 @@
         }
 
         .saidas-container {
-            background: #fff5f7;
+            background: #222;
             padding: 20px;
-            border-radius: 8px;
-            border-left: 4px solid #f56565;
+            border-radius: 12px;
+            border-left: 4px solid #ff3b30;
         }
 
         .saida-item {
-            background: white;
+            background: #2a2a2a;
             padding: 15px;
-            border-radius: 8px;
+            border-radius: 12px;
             margin-bottom: 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             gap: 10px;
-            border: 1px solid #fed7d7;
+            border: 1px solid #333;
         }
 
         .saida-info {
@@ -234,56 +262,71 @@
 
         .saida-valor {
             font-weight: 700;
-            color: #f56565;
+            color: #ff3b30;
             font-size: 16px;
+            background: #2a2a2a;
+            border: 1px solid #333;
+            padding: 10px;
+            border-radius: 8px;
         }
 
-        .saida-descricao {
-            font-size: 12px;
-            color: #718096;
-            margin-top: 4px;
+        .saida-descricao-input {
+            background: #2a2a2a;
+            border: 1px solid #333;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 0 !important;
         }
 
         .btn-remove-saida {
-            background: #fed7d7;
+            background: #ff3b30;
             border: none;
-            color: #c53030;
+            color: white;
             padding: 8px 12px;
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 12px;
             font-weight: 600;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
         }
 
         .btn-remove-saida:hover {
-            background: #fc8181;
-            color: white;
+            background: #ff453a;
+            transform: scale(1.05);
+        }
+
+        .btn-remove-saida:active {
+            transform: scale(0.95);
         }
 
         .btn-add-saida {
-            background: white;
-            border: 2px dashed #cbd5e0;
-            color: #4a5568;
+            background: #2a2a2a;
+            border: 2px dashed #444;
+            color: #5ac8fa;
             padding: 12px 20px;
-            border-radius: 8px;
+            border-radius: 12px;
             cursor: pointer;
             font-size: 14px;
             font-weight: 600;
             transition: all 0.3s ease;
+            margin-top: 15px;
         }
 
         .btn-add-saida:hover {
-            border-color: #667eea;
-            color: #667eea;
-            background: #f7fafc;
+            border-color: #5ac8fa;
+            background: #333;
+        }
+
+        .btn-add-saida:active {
+            transform: scale(0.95);
         }
 
         .calculation-section {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: #222;
             padding: 20px;
-            border-radius: 8px;
+            border-radius: 12px;
             margin-top: 20px;
+            border: 1px solid #333;
         }
 
         .calculation-row {
@@ -291,7 +334,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 12px 0;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            border-bottom: 1px solid #333;
         }
 
         .calculation-row:last-child {
@@ -299,89 +342,106 @@
         }
 
         .calculation-label {
-            color: #4a5568;
+            color: #bbb;
             font-weight: 500;
         }
 
         .calculation-value {
             font-weight: 700;
             font-size: 16px;
-            color: #2d3748;
+            color: #5ac8fa;
         }
 
         .final-balance {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #34c759 0%, #00d084 100%);
             color: white;
-            padding: 20px;
-            border-radius: 8px;
+            padding: 25px;
+            border-radius: 16px;
             text-align: center;
             margin-top: 20px;
+            box-shadow: 0 8px 20px rgba(52, 199, 89, 0.2);
         }
 
         .final-balance-label {
             font-size: 14px;
             opacity: 0.9;
             margin-bottom: 8px;
+            font-weight: 600;
         }
 
         .final-balance-value {
-            font-size: 32px;
+            font-size: 36px;
             font-weight: 700;
         }
 
         .button-group {
-            display: flex;
-            gap: 10px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
             margin-top: 30px;
-            flex-wrap: wrap;
         }
 
         button {
-            flex: 1;
-            min-width: 150px;
             padding: 14px 24px;
             border: none;
-            border-radius: 8px;
+            border-radius: 12px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .btn-submit {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #34c759 0%, #00d084 100%);
             color: white;
+            grid-column: 1 / -1;
         }
 
         .btn-submit:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 8px 20px rgba(52, 199, 89, 0.3);
+        }
+
+        .btn-submit:active {
+            transform: scale(0.98);
         }
 
         .btn-export {
-            background: #48bb78;
-            color: white;
+            background: #5ac8fa;
+            color: #000;
         }
 
         .btn-export:hover {
-            background: #38a169;
+            background: #5fd3ff;
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(72, 187, 120, 0.3);
+            box-shadow: 0 8px 20px rgba(90, 200, 250, 0.3);
+        }
+
+        .btn-export:active {
+            transform: scale(0.95);
         }
 
         .btn-clear {
-            background: #e2e8f0;
-            color: #4a5568;
+            background: #ff3b30;
+            color: white;
         }
 
         .btn-clear:hover {
-            background: #cbd5e0;
+            background: #ff453a;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 59, 48, 0.3);
+        }
+
+        .btn-clear:active {
+            transform: scale(0.95);
         }
 
         .records-section {
             margin-top: 40px;
             padding-top: 30px;
-            border-top: 2px solid #e2e8f0;
+            border-top: 1px solid #333;
         }
 
         .records-table {
@@ -391,64 +451,112 @@
         }
 
         .records-table thead {
-            background: #f7fafc;
+            background: #222;
         }
 
         .records-table th {
             padding: 12px;
             text-align: left;
             font-weight: 600;
-            color: #4a5568;
-            border-bottom: 2px solid #e2e8f0;
+            color: #999;
+            border-bottom: 2px solid #333;
             font-size: 14px;
         }
 
         .records-table td {
             padding: 12px;
-            border-bottom: 1px solid #e2e8f0;
-            color: #2d3748;
+            border-bottom: 1px solid #333;
+            color: #ccc;
         }
 
         .records-table tbody tr:hover {
-            background: #f7fafc;
+            background: #222;
         }
 
         .value-positive {
-            color: #48bb78;
+            color: #34c759;
             font-weight: 600;
         }
 
         .value-negative {
-            color: #f56565;
+            color: #ff3b30;
             font-weight: 600;
         }
 
         .btn-delete-record {
-            background: #fed7d7;
+            background: #ff3b30;
             border: none;
-            color: #c53030;
+            color: white;
             padding: 6px 12px;
             border-radius: 6px;
             cursor: pointer;
             font-size: 12px;
             font-weight: 600;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
         }
 
         .btn-delete-record:hover {
-            background: #fc8181;
-            color: white;
+            background: #ff453a;
+            transform: scale(1.05);
+        }
+
+        .btn-delete-record:active {
+            transform: scale(0.95);
         }
 
         .empty-state {
             text-align: center;
             padding: 40px 20px;
-            color: #718096;
+            color: #666;
         }
 
         .empty-state-icon {
             font-size: 48px;
             margin-bottom: 10px;
+        }
+
+        /* iPhone-like keyboard */
+        .iphone-keyboard {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+            padding: 15px;
+            background: #222;
+            border-radius: 12px;
+        }
+
+        .iphone-key {
+            background: #2a2a2a;
+            border: 1px solid #333;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .iphone-key:hover {
+            background: #333;
+            border-color: #444;
+        }
+
+        .iphone-key:active {
+            background: #444;
+            transform: scale(0.95);
+        }
+
+        .iphone-key.delete {
+            background: #ff3b30;
+            color: white;
+            grid-column: span 1;
+        }
+
+        .iphone-key.delete:hover {
+            background: #ff453a;
         }
 
         @media (max-width: 768px) {
@@ -478,6 +586,14 @@
                 min-width: 100%;
             }
 
+            .button-group {
+                grid-template-columns: 1fr;
+            }
+
+            .btn-submit {
+                grid-column: 1 / -1;
+            }
+
             .records-table {
                 font-size: 12px;
             }
@@ -493,7 +609,7 @@
     <div class="container">
         <div class="header">
             <div class="header-left">
-                <h1>📊 Caixa diário</h1>
+                <h1>💰 Caixa diário</h1>
                 <select id="storeSelect" class="store-selector">
                     <option value="loja1">🏪 Loja 1 - Malubiju</option>
                     <option value="loja2">🏪 Loja 2</option>
@@ -528,12 +644,13 @@
             <form id="caixaForm">
                 <div class="form-group">
                     <label for="saldoInicio">Saldo início do dia (R$)</label>
-                    <input type="number" id="saldoInicio" step="0.01" min="0" value="0.00" readonly style="background: #f7fafc; color: #718096;">
+                    <input type="number" id="saldoInicio" step="0.01" min="0" value="0.00" readonly style="background: #1a1a1a; color: #999; cursor: not-allowed;">
                 </div>
 
                 <div class="form-group">
                     <label for="entradas">Dinheiro que entrou hoje (R$)</label>
                     <input type="number" id="entradas" step="0.01" min="0" placeholder="0,00" required>
+                    <div class="iphone-keyboard" id="keyboard-entradas"></div>
                 </div>
 
                 <div class="form-group">
@@ -550,14 +667,14 @@
                 </div>
 
                 <div class="final-balance">
-                    <div class="final-balance-label">💰 Saldo Confirmado</div>
+                    <div class="final-balance-label">💰 Saldo Final do Dia</div>
                     <div class="final-balance-value" id="saldoFinal">R$ 0,00</div>
                 </div>
 
                 <div class="button-group">
-                    <button type="button" class="btn-export" onclick="exportarCSV()">📥 Exportar dados</button>
+                    <button type="button" class="btn-export" onclick="exportarCSV()">📥 Exportar</button>
                     <button type="button" class="btn-clear" onclick="limparFormulario()">🗑️ Limpar</button>
-                    <button type="submit" class="btn-submit">✅ Confirmar saldo</button>
+                    <button type="submit" class="btn-submit">✅ Confirmar</button>
                 </div>
             </form>
 
@@ -618,6 +735,36 @@
             carregarDados();
         }
 
+        function criarTeclado(inputId) {
+            const numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '.', 'Del'];
+            const keyboard = document.createElement('div');
+            keyboard.className = 'iphone-keyboard';
+            keyboard.id = `keyboard-${inputId}`;
+
+            numbers.forEach(num => {
+                const key = document.createElement('div');
+                key.className = `iphone-key ${num === 'Del' ? 'delete' : ''}`;
+                key.textContent = num;
+
+                key.addEventListener('click', () => {
+                    const input = document.getElementById(inputId);
+                    if (num === 'Del') {
+                        input.value = input.value.slice(0, -1);
+                    } else if (num === '.' && input.value.includes('.')) {
+                        return;
+                    } else {
+                        input.value += num;
+                    }
+                    input.focus();
+                    calcularSaldoAutomatico();
+                });
+
+                keyboard.appendChild(key);
+            });
+
+            return keyboard;
+        }
+
         function adicionarSaida() {
             const container = document.getElementById('saidasContainer');
             const id = Date.now();
@@ -625,7 +772,7 @@
             const html = `
                 <div class="saida-item" data-saida-id="${id}">
                     <div style="flex: 1; display: flex; gap: 10px;">
-                        <input type="number" class="saida-valor" step="0.01" min="0" placeholder="0,00" data-id="${id}">
+                        <input type="number" class="saida-valor" step="0.01" min="0" placeholder="0,00" data-id="${id}" style="max-width: 120px;">
                         <input type="text" class="saida-descricao-input" placeholder="Descrição" data-id="${id}" style="flex: 1; min-width: 150px;">
                     </div>
                     <button type="button" class="btn-remove-saida" onclick="removerSaida(${id})">Remover</button>
@@ -703,7 +850,9 @@
             const storeSelect = document.getElementById('storeSelect').value;
             const key = getStorageKey(storeSelect, currentDate);
             const saidas = getSaidasData();
-            const saldoFinal = parseFloat(document.getElementById('saldoFinal').textContent.replace('R$ ', '').replace(',', '.')) || 0;
+            let saldoFinalStr = document.getElementById('saldoFinal').textContent;
+            saldoFinalStr = saldoFinalStr.replace('R$ ', '').replace(',', '.');
+            const saldoFinal = parseFloat(saldoFinalStr) || 0;
             
             const data = {
                 data: getDateFormatted(currentDate),
