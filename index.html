@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Caixa Diário - Vinicius Guedes</title>
+    <title>Caixa Diário - Login</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.0/crypto-js.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -18,6 +19,196 @@
             min-height: 100vh;
             padding: 20px;
             color: #fff;
+        }
+
+        /* LOGIN PAGE */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .login-box {
+            background: #1a1a1a;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            border: 1px solid #333;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .login-header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #5ac8fa 0%, #34c759 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .login-header p {
+            color: #999;
+            font-size: 14px;
+        }
+
+        .tab-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .tab-btn {
+            padding: 12px;
+            border: 2px solid #333;
+            background: #2a2a2a;
+            color: #999;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            border-color: #5ac8fa;
+            color: #5ac8fa;
+            background: #333;
+        }
+
+        .tab-btn:hover {
+            border-color: #5ac8fa;
+            color: #5ac8fa;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #bbb;
+            margin-bottom: 8px;
+        }
+
+        input[type="email"],
+        input[type="password"],
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #333;
+            border-radius: 8px;
+            background: #2a2a2a;
+            color: #fff;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        input[type="email"]:focus,
+        input[type="password"]:focus,
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #5ac8fa;
+            box-shadow: 0 0 0 3px rgba(90, 200, 250, 0.1);
+            background: #333;
+        }
+
+        input::placeholder {
+            color: #666;
+        }
+
+        .form-section {
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        .btn-login,
+        .btn-register {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-login {
+            background: linear-gradient(135deg, #5ac8fa 0%, #34c759 100%);
+            color: #000;
+            margin-bottom: 15px;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(90, 200, 250, 0.3);
+        }
+
+        .btn-login:active {
+            transform: scale(0.98);
+        }
+
+        .btn-register {
+            background: linear-gradient(135deg, #5ac8fa 0%, #34c759 100%);
+            color: #000;
+        }
+
+        .btn-register:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(90, 200, 250, 0.3);
+        }
+
+        .forgot-password {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .forgot-password a {
+            color: #5ac8fa;
+            text-decoration: none;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            background: #ff3b30;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        /* MAIN APP */
+        .app-container {
+            display: none;
+        }
+
+        .app-container.active {
+            display: block;
         }
 
         .container {
@@ -41,10 +232,17 @@
             border-bottom: 1px solid #333;
         }
 
+        .header-left {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
         .header-left h1 {
             font-size: 28px;
             font-weight: 700;
-            margin-bottom: 5px;
+            margin: 0;
         }
 
         .store-selector {
@@ -64,9 +262,53 @@
             border-color: #666;
         }
 
-        .store-selector option {
-            background: #1a1a1a;
+        .user-menu {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .user-info {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            background: #2a2a2a;
+            padding: 10px 15px;
+            border-radius: 12px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #5ac8fa 0%, #34c759 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #000;
+            font-size: 18px;
+        }
+
+        .user-name {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .btn-logout {
+            background: #ff3b30;
+            border: none;
             color: white;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .btn-logout:hover {
+            background: #ff453a;
         }
 
         .date-navigation {
@@ -325,10 +567,6 @@
             border: 1px solid #333;
         }
 
-        .saida-info {
-            flex: 1;
-        }
-
         .saida-valor {
             font-weight: 700;
             color: #ff3b30;
@@ -384,10 +622,6 @@
         .btn-add-saida:hover {
             border-color: #5ac8fa;
             background: #333;
-        }
-
-        .btn-add-saida:active {
-            transform: scale(0.95);
         }
 
         .calculation-section {
@@ -473,10 +707,6 @@
             box-shadow: 0 8px 20px rgba(52, 199, 89, 0.3);
         }
 
-        .btn-submit:active {
-            transform: scale(0.98);
-        }
-
         .btn-export {
             background: #5ac8fa;
             color: #000;
@@ -485,11 +715,6 @@
         .btn-export:hover {
             background: #5fd3ff;
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(90, 200, 250, 0.3);
-        }
-
-        .btn-export:active {
-            transform: scale(0.95);
         }
 
         .btn-clear {
@@ -500,11 +725,6 @@
         .btn-clear:hover {
             background: #ff453a;
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(255, 59, 48, 0.3);
-        }
-
-        .btn-clear:active {
-            transform: scale(0.95);
         }
 
         .records-section {
@@ -569,10 +789,6 @@
             transform: scale(1.05);
         }
 
-        .btn-delete-record:active {
-            transform: scale(0.95);
-        }
-
         .empty-state {
             text-align: center;
             padding: 40px 20px;
@@ -584,7 +800,6 @@
             margin-bottom: 10px;
         }
 
-        /* iPhone-like keyboard */
         .iphone-keyboard {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -621,7 +836,6 @@
         .iphone-key.delete {
             background: #ff3b30;
             color: white;
-            grid-column: span 1;
         }
 
         .iphone-key.delete:hover {
@@ -691,9 +905,15 @@
 
             .header-left {
                 width: 100%;
+                flex-direction: column;
             }
 
             .store-selector {
+                width: 100%;
+            }
+
+            .user-menu {
+                justify-content: center;
                 width: 100%;
             }
 
@@ -718,10 +938,6 @@
                 grid-template-columns: 1fr;
             }
 
-            .btn-submit {
-                grid-column: 1 / -1;
-            }
-
             .records-table {
                 font-size: 12px;
             }
@@ -738,174 +954,397 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="header-left">
-                <h1>💰 Caixa diário</h1>
-                <select id="storeSelect" class="store-selector">
-                    <option value="loja1">🏪 Loja 1 - Malubiju</option>
-                    <option value="loja2">🏪 Loja 2</option>
-                    <option value="loja3">🏪 Loja 3</option>
-                </select>
+    <!-- LOGIN PAGE -->
+    <div id="loginPage" class="login-container">
+        <div class="login-box">
+            <div class="login-header">
+                <h1>💰 Caixa</h1>
+                <p>Controle financeiro por loja</p>
             </div>
-            <div class="date-navigation">
-                <button onclick="previousDay()">←</button>
-                <div class="current-date" id="currentDate">13 Mai</div>
-                <button onclick="nextDay()">→</button>
-            </div>
-        </div>
 
-        <div class="tabs">
-            <button class="tab active" onclick="switchTab('diario')">📊 Diário</button>
-            <button class="tab" onclick="switchTab('provisionamento')">📝 Provisionamento</button>
-            <button class="tab" onclick="switchTab('graficos')">📈 Gráficos</button>
-        </div>
+            <div class="tab-buttons">
+                <button class="tab-btn active" onclick="switchLoginTab('login')">🔐 Login</button>
+                <button class="tab-btn" onclick="switchLoginTab('register')">📝 Registrar</button>
+            </div>
 
-        <div class="stats">
-            <div class="stat-card inicio">
-                <div class="stat-label">📥 Início do dia</div>
-                <div class="stat-value" id="statInicio">R$ 0,00</div>
-            </div>
-            <div class="stat-card entradas">
-                <div class="stat-label">📤 Entradas</div>
-                <div class="stat-value" id="statEntradas">R$ 0,00</div>
-            </div>
-            <div class="stat-card saidas">
-                <div class="stat-label">💸 Saídas</div>
-                <div class="stat-value" id="statSaidas">R$ 0,00</div>
-            </div>
-            <div class="stat-card receber">
-                <div class="stat-label">💳 A Receber</div>
-                <div class="stat-value" id="statReceber">R$ 0,00</div>
-            </div>
-            <div class="stat-card pagar">
-                <div class="stat-label">💰 A Pagar</div>
-                <div class="stat-value" id="statPagar">R$ 0,00</div>
-            </div>
-        </div>
+            <div id="errorMsg" class="error-message"></div>
 
-        <!-- TAB: Diário -->
-        <div id="diario" class="tab-content active">
-            <div class="main-content">
-                <div class="section-title">📋 Registro do dia — <span id="dayTitle">dia 13</span></div>
-
-                <form id="caixaForm">
+            <!-- LOGIN FORM -->
+            <div id="loginForm" class="form-section active">
+                <form onsubmit="handleLogin(event)">
                     <div class="form-group">
-                        <label for="saldoInicio">Saldo início do dia (R$)</label>
-                        <input type="number" id="saldoInicio" step="0.01" min="0" value="0.00" readonly style="background: #1a1a1a; color: #999; cursor: not-allowed;">
+                        <label for="loginEmail">Email</label>
+                        <input type="email" id="loginEmail" placeholder="seu@email.com" required>
                     </div>
 
                     <div class="form-group">
-                        <label for="entradas">Dinheiro que entrou hoje (R$)</label>
-                        <input type="number" id="entradas" step="0.01" min="0" placeholder="0,00" required>
-                        <div class="iphone-keyboard" id="keyboard-entradas"></div>
+                        <label for="loginPassword">Senha</label>
+                        <input type="password" id="loginPassword" placeholder="Sua senha" required>
                     </div>
 
-                    <div class="form-group">
-                        <label>Saídas do dia</label>
-                        <div class="saidas-container" id="saidasContainer"></div>
-                        <button type="button" class="btn-add-saida" onclick="adicionarSaida()">+ Adicionar saída</button>
-                    </div>
-
-                    <div class="calculation-section">
-                        <div class="calculation-row">
-                            <span class="calculation-label">Saldo calculado (automático)</span>
-                            <span class="calculation-value" id="saldoCalculado">R$ 0,00</span>
-                        </div>
-                    </div>
-
-                    <div class="final-balance">
-                        <div class="final-balance-label">💰 Saldo Final do Dia</div>
-                        <div class="final-balance-value" id="saldoFinal">R$ 0,00</div>
-                    </div>
-
-                    <div class="button-group">
-                        <button type="button" class="btn-export" onclick="exportarCSV()">📥 Exportar</button>
-                        <button type="button" class="btn-clear" onclick="limparFormulario()">🗑️ Limpar</button>
-                        <button type="submit" class="btn-submit">✅ Confirmar</button>
-                    </div>
+                    <button type="submit" class="btn-login">Entrar</button>
                 </form>
 
-                <div class="records-section">
-                    <div class="section-title">📈 Histórico de movimentações</div>
-                    <div id="recordsContainer"></div>
+                <div class="forgot-password">
+                    <span onclick="switchLoginTab('forgot')" style="cursor: pointer; color: #5ac8fa;">Esqueceu a senha?</span>
                 </div>
             </div>
-        </div>
 
-        <!-- TAB: Provisionamento -->
-        <div id="provisionamento" class="tab-content">
-            <div class="main-content">
-                <div class="section-title">📝 Contas a Receber e Pagar</div>
-
-                <form id="provisioningForm">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="provTipo">Tipo</label>
-                            <select id="provTipo" required>
-                                <option value="">Selecione...</option>
-                                <option value="receber">Contas a Receber</option>
-                                <option value="pagar">Contas a Pagar</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="provValor">Valor (R$)</label>
-                            <input type="number" id="provValor" step="0.01" min="0" placeholder="0,00" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="provVencimento">Data de Vencimento</label>
-                            <input type="date" id="provVencimento" required>
-                        </div>
+            <!-- REGISTER FORM -->
+            <div id="registerForm" class="form-section">
+                <form onsubmit="handleRegister(event)">
+                    <div class="form-group">
+                        <label for="registerName">Nome Completo</label>
+                        <input type="text" id="registerName" placeholder="Seu nome" required>
                     </div>
 
                     <div class="form-group">
-                        <label for="provDescricao">Descrição</label>
-                        <textarea id="provDescricao" placeholder="Descreva a conta..." required></textarea>
+                        <label for="registerEmail">Email</label>
+                        <input type="email" id="registerEmail" placeholder="seu@email.com" required>
                     </div>
 
-                    <div class="button-group" style="margin-top: 20px;">
-                        <button type="submit" class="btn-submit" style="grid-column: 1 / -1;">➕ Adicionar Provisão</button>
+                    <div class="form-group">
+                        <label for="registerPassword">Senha</label>
+                        <input type="password" id="registerPassword" placeholder="Mínimo 6 caracteres" required minlength="6">
                     </div>
+
+                    <div class="form-group">
+                        <label for="registerConfirm">Confirmar Senha</label>
+                        <input type="password" id="registerConfirm" placeholder="Confirme a senha" required minlength="6">
+                    </div>
+
+                    <button type="submit" class="btn-register">Criar Conta</button>
+                </form>
+            </div>
+
+            <!-- FORGOT PASSWORD FORM -->
+            <div id="forgotForm" class="form-section">
+                <form onsubmit="handleForgotPassword(event)">
+                    <div class="form-group">
+                        <label for="forgotEmail">Email</label>
+                        <input type="email" id="forgotEmail" placeholder="seu@email.com" required>
+                    </div>
+
+                    <p style="font-size: 12px; color: #999; margin-bottom: 20px;">
+                        Uma nova senha será enviada para seu email. (Simulação local)
+                    </p>
+
+                    <button type="submit" class="btn-login">Recuperar Senha</button>
                 </form>
 
-                <div class="records-section">
-                    <div class="section-title">📋 Provisões Registradas</div>
-                    <div id="provisioningRecords"></div>
+                <div style="text-align: center; margin-top: 15px;">
+                    <span onclick="switchLoginTab('login')" style="cursor: pointer; color: #5ac8fa; font-size: 13px;">Voltar ao login</span>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- TAB: Gráficos -->
-        <div id="graficos" class="tab-content">
-            <div class="main-content">
-                <div class="section-title">📊 Evolução de Saldo - Últimos 12 Meses</div>
-
-                <div class="chart-container">
-                    <div class="chart-wrapper">
-                        <canvas id="balanceChart"></canvas>
-                    </div>
+    <!-- MAIN APP -->
+    <div id="appContainer" class="app-container">
+        <div class="container">
+            <div class="header">
+                <div class="header-left">
+                    <h1>💰 Caixa diário</h1>
+                    <select id="storeSelect" class="store-selector">
+                        <option value="loja1">🏪 Loja 1 - Malubiju</option>
+                        <option value="loja2">🏪 Loja 2</option>
+                        <option value="loja3">🏪 Loja 3</option>
+                    </select>
                 </div>
 
-                <div class="records-section">
-                    <div class="section-title">💹 Resumo Mensal</div>
-                    <div id="monthlySummary"></div>
+                <div style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
+                    <div class="date-navigation">
+                        <button onclick="previousDay()">←</button>
+                        <div class="current-date" id="currentDate">13 Mai</div>
+                        <button onclick="nextDay()">→</button>
+                    </div>
+
+                    <div class="user-menu">
+                        <div class="user-info">
+                            <div class="user-avatar" id="userAvatar">U</div>
+                            <div class="user-name" id="userName">Usuário</div>
+                        </div>
+                        <button class="btn-logout" onclick="handleLogout()">Sair</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('diario')">📊 Diário</button>
+                <button class="tab" onclick="switchTab('provisionamento')">📝 Provisionamento</button>
+                <button class="tab" onclick="switchTab('graficos')">📈 Gráficos</button>
+            </div>
+
+            <div class="stats">
+                <div class="stat-card inicio">
+                    <div class="stat-label">📥 Início do dia</div>
+                    <div class="stat-value" id="statInicio">R$ 0,00</div>
+                </div>
+                <div class="stat-card entradas">
+                    <div class="stat-label">📤 Entradas</div>
+                    <div class="stat-value" id="statEntradas">R$ 0,00</div>
+                </div>
+                <div class="stat-card saidas">
+                    <div class="stat-label">💸 Saídas</div>
+                    <div class="stat-value" id="statSaidas">R$ 0,00</div>
+                </div>
+                <div class="stat-card receber">
+                    <div class="stat-label">💳 A Receber</div>
+                    <div class="stat-value" id="statReceber">R$ 0,00</div>
+                </div>
+                <div class="stat-card pagar">
+                    <div class="stat-label">💰 A Pagar</div>
+                    <div class="stat-value" id="statPagar">R$ 0,00</div>
+                </div>
+            </div>
+
+            <!-- TAB: Diário -->
+            <div id="diario" class="tab-content active">
+                <div class="main-content">
+                    <div class="section-title">📋 Registro do dia — <span id="dayTitle">dia 13</span></div>
+
+                    <form id="caixaForm">
+                        <div class="form-group">
+                            <label for="saldoInicio">Saldo início do dia (R$)</label>
+                            <input type="number" id="saldoInicio" step="0.01" min="0" value="0.00" readonly style="background: #1a1a1a; color: #999; cursor: not-allowed;">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="entradas">Dinheiro que entrou hoje (R$)</label>
+                            <input type="number" id="entradas" step="0.01" min="0" placeholder="0,00" required>
+                            <div class="iphone-keyboard" id="keyboard-entradas"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Saídas do dia</label>
+                            <div class="saidas-container" id="saidasContainer"></div>
+                            <button type="button" class="btn-add-saida" onclick="adicionarSaida()">+ Adicionar saída</button>
+                        </div>
+
+                        <div class="calculation-section">
+                            <div class="calculation-row">
+                                <span class="calculation-label">Saldo calculado (automático)</span>
+                                <span class="calculation-value" id="saldoCalculado">R$ 0,00</span>
+                            </div>
+                        </div>
+
+                        <div class="final-balance">
+                            <div class="final-balance-label">💰 Saldo Final do Dia</div>
+                            <div class="final-balance-value" id="saldoFinal">R$ 0,00</div>
+                        </div>
+
+                        <div class="button-group">
+                            <button type="button" class="btn-export" onclick="exportarCSV()">📥 Exportar</button>
+                            <button type="button" class="btn-clear" onclick="limparFormulario()">🗑️ Limpar</button>
+                            <button type="submit" class="btn-submit">✅ Confirmar</button>
+                        </div>
+                    </form>
+
+                    <div class="records-section">
+                        <div class="section-title">📈 Histórico de movimentações</div>
+                        <div id="recordsContainer"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: Provisionamento -->
+            <div id="provisionamento" class="tab-content">
+                <div class="main-content">
+                    <div class="section-title">📝 Contas a Receber e Pagar</div>
+
+                    <form id="provisioningForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="provTipo">Tipo</label>
+                                <select id="provTipo" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="receber">Contas a Receber</option>
+                                    <option value="pagar">Contas a Pagar</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="provValor">Valor (R$)</label>
+                                <input type="number" id="provValor" step="0.01" min="0" placeholder="0,00" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="provVencimento">Data de Vencimento</label>
+                                <input type="date" id="provVencimento" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="provDescricao">Descrição</label>
+                            <textarea id="provDescricao" placeholder="Descreva a conta..." required></textarea>
+                        </div>
+
+                        <div class="button-group" style="margin-top: 20px;">
+                            <button type="submit" class="btn-submit" style="grid-column: 1 / -1;">➕ Adicionar Provisão</button>
+                        </div>
+                    </form>
+
+                    <div class="records-section">
+                        <div class="section-title">📋 Provisões Registradas</div>
+                        <div id="provisioningRecords"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: Gráficos -->
+            <div id="graficos" class="tab-content">
+                <div class="main-content">
+                    <div class="section-title">📊 Evolução de Saldo - Últimos 12 Meses</div>
+
+                    <div class="chart-container">
+                        <div class="chart-wrapper">
+                            <canvas id="balanceChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="records-section">
+                        <div class="section-title">💹 Resumo Mensal</div>
+                        <div id="monthlySummary"></div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
+        // ========== AUTHENTICATION ==========
+        let currentUser = null;
         let currentDate = new Date(2026, 4, 13);
         let balanceChart = null;
 
+        function switchLoginTab(tab) {
+            document.querySelectorAll('.form-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+
+            document.getElementById(tab + 'Form').classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function showError(message) {
+            const errorEl = document.getElementById('errorMsg');
+            errorEl.textContent = message;
+            errorEl.classList.add('show');
+            setTimeout(() => errorEl.classList.remove('show'), 5000);
+        }
+
+        function hashPassword(password) {
+            return CryptoJS.SHA256(password).toString();
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const user = users.find(u => u.email === email && u.password === hashPassword(password));
+
+            if (!user) {
+                showError('❌ Email ou senha incorretos!');
+                return;
+            }
+
+            currentUser = user;
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            loginSuccess();
+        }
+
+        function handleRegister(e) {
+            e.preventDefault();
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirm = document.getElementById('registerConfirm').value;
+
+            if (password !== confirm) {
+                showError('❌ As senhas não coincidem!');
+                return;
+            }
+
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            if (users.some(u => u.email === email)) {
+                showError('❌ Este email já está registrado!');
+                return;
+            }
+
+            const newUser = {
+                id: Date.now(),
+                name: name,
+                email: email,
+                password: hashPassword(password),
+                createdAt: new Date().toISOString()
+            };
+
+            users.push(newUser);
+            localStorage.setItem('users', JSON.stringify(users));
+
+            alert('✅ Conta criada com sucesso! Faça login agora.');
+            switchLoginTab('login');
+            document.getElementById('loginEmail').value = email;
+        }
+
+        function handleForgotPassword(e) {
+            e.preventDefault();
+            const email = document.getElementById('forgotEmail').value;
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const user = users.find(u => u.email === email);
+
+            if (!user) {
+                showError('❌ Email não encontrado!');
+                return;
+            }
+
+            const newPassword = Math.random().toString(36).slice(2, 10);
+            user.password = hashPassword(newPassword);
+            localStorage.setItem('users', JSON.stringify(users));
+
+            alert(`✅ Nova senha gerada: ${newPassword}\n\n(Esta é uma simulação. Confira seu email em um caso real)`);
+            switchLoginTab('login');
+        }
+
+        function loginSuccess() {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('appContainer').classList.add('active');
+            updateUserDisplay();
+            carregarDados();
+            carregarProvisionamento();
+        }
+
+        function handleLogout() {
+            if (confirm('Tem certeza que deseja sair?')) {
+                localStorage.removeItem('currentUser');
+                currentUser = null;
+                document.getElementById('appContainer').classList.remove('active');
+                document.getElementById('loginPage').style.display = 'flex';
+                document.getElementById('loginForm').classList.add('active');
+                document.getElementById('registerForm').classList.remove('active');
+                document.getElementById('forgotForm').classList.remove('active');
+                document.getElementById('loginEmail').value = '';
+                document.getElementById('loginPassword').value = '';
+            }
+        }
+
+        function updateUserDisplay() {
+            if (currentUser) {
+                const initials = currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase();
+                document.getElementById('userAvatar').textContent = initials;
+                document.getElementById('userName').textContent = currentUser.name;
+            }
+        }
+
+        // ========== STORAGE KEYS ==========
         function getStorageKey(store, date) {
-            return `caixa_${store}_${date.toISOString().split('T')[0]}`;
+            return `caixa_${currentUser.id}_${store}_${date.toISOString().split('T')[0]}`;
         }
 
         function getProvisioningKey(store) {
-            return `provisioning_${store}`;
+            return `provisioning_${currentUser.id}_${store}`;
         }
 
+        // ========== UTILITIES ==========
         function formatCurrency(value) {
             return new Intl.NumberFormat('pt-BR', {
                 style: 'currency',
@@ -926,17 +1365,9 @@
         }
 
         function switchTab(tabName) {
-            // Hide all tabs
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
-            });
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
 
-            // Remove active class from all tab buttons
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-
-            // Show selected tab
             document.getElementById(tabName).classList.add('active');
             event.target.classList.add('active');
 
@@ -962,36 +1393,6 @@
             currentDate.setDate(currentDate.getDate() + 1);
             updateDateDisplay();
             carregarDados();
-        }
-
-        function criarTeclado(inputId) {
-            const numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '.', 'Del'];
-            const keyboard = document.createElement('div');
-            keyboard.className = 'iphone-keyboard';
-            keyboard.id = `keyboard-${inputId}`;
-
-            numbers.forEach(num => {
-                const key = document.createElement('div');
-                key.className = `iphone-key ${num === 'Del' ? 'delete' : ''}`;
-                key.textContent = num;
-
-                key.addEventListener('click', () => {
-                    const input = document.getElementById(inputId);
-                    if (num === 'Del') {
-                        input.value = input.value.slice(0, -1);
-                    } else if (num === '.' && input.value.includes('.')) {
-                        return;
-                    } else {
-                        input.value += num;
-                    }
-                    input.focus();
-                    calcularSaldoAutomatico();
-                });
-
-                keyboard.appendChild(key);
-            });
-
-            return keyboard;
         }
 
         function adicionarSaida() {
@@ -1129,7 +1530,7 @@
             
             const records = [];
             for (let key in localStorage) {
-                if (key.startsWith(`caixa_${storeSelect}_`)) {
+                if (key.startsWith(`caixa_${currentUser.id}_${storeSelect}_`)) {
                     const data = JSON.parse(localStorage.getItem(key));
                     records.push(data);
                 }
@@ -1193,7 +1594,7 @@
 
         function deletarRegistro(data, store) {
             if (confirm('⚠️ Tem certeza que deseja deletar este lançamento?')) {
-                const key = `caixa_${store}_${data}`;
+                const key = getStorageKey(store, new Date(data));
                 localStorage.removeItem(key);
                 carregarRegistros();
                 carregarDados();
@@ -1206,7 +1607,7 @@
             
             const records = [];
             for (let key in localStorage) {
-                if (key.startsWith(`caixa_${storeSelect}_`)) {
+                if (key.startsWith(`caixa_${currentUser.id}_${storeSelect}_`)) {
                     const data = JSON.parse(localStorage.getItem(key));
                     records.push(data);
                 }
@@ -1215,6 +1616,7 @@
             records.sort((a, b) => new Date(a.data) - new Date(b.data));
             
             let csv = `Caixa Diário - ${storeName}\n`;
+            csv += `Usuário: ${currentUser.name}\n`;
             csv += `Data de Exportação: ${new Date().toLocaleDateString('pt-BR')}\n\n`;
             csv += `Data,Saldo Inicial,Entradas,Saídas,Descrição,Saldo Final\n`;
             
@@ -1341,13 +1743,12 @@
             const records = [];
 
             for (let key in localStorage) {
-                if (key.startsWith(`caixa_${storeSelect}_`)) {
+                if (key.startsWith(`caixa_${currentUser.id}_${storeSelect}_`)) {
                     const data = JSON.parse(localStorage.getItem(key));
                     records.push(data);
                 }
             }
 
-            // Agrupar por mês
             const meses = {};
             const hoje = new Date();
             const ultimosMeses = [];
@@ -1450,7 +1851,6 @@
                 }
             });
 
-            // Resumo Mensal
             const summaryContainer = document.getElementById('monthlySummary');
             let html = '<table class="records-table"><thead><tr><th>Mês</th><th>Entradas</th><th>Saídas</th><th>Saldo Final</th></tr></thead><tbody>';
 
@@ -1494,10 +1894,16 @@
             nextDay();
         });
 
-        // Inicializar
-        updateDateDisplay();
-        carregarDados();
-        carregarProvisionamento();
+        // ========== INITIALIZATION ==========
+        window.addEventListener('load', () => {
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                loginSuccess();
+            } else {
+                updateDateDisplay();
+            }
+        });
     </script>
 </body>
 </html>
